@@ -1,14 +1,15 @@
 import 'reflect-metadata';
 import 'express-async-errors';
 
+import { debug } from 'debug';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { errors } from 'celebrate';
 import AppError from '@shared/errors/AppError';
 import router from './routes';
 
-// Initialize app here
 (async () => {
+  const log = debug('api:server.ts');
   const app = express();
 
   app.use(cors());
@@ -26,7 +27,7 @@ import router from './routes';
       }
 
       // eslint-disable-next-line no-console
-      console.error(error);
+      log(error);
       return response.status(500).json({
         error: 'INTERNAL_SERVER_ERROR',
       });
@@ -35,7 +36,6 @@ import router from './routes';
 
   const PORT = process.env.PORT || 3333;
   app.listen(PORT, () => {
-    // eslint-disable-next-line no-console
-    console.log(`Server listening on port ${PORT}`);
+    log(`Server listening on port ${PORT}`);
   });
 })();
